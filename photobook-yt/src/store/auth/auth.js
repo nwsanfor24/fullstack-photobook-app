@@ -1,4 +1,4 @@
-import { Auth, loadingContainer } from "aws-amplify";
+import { Auth } from "aws-amplify";
 
 export const auth = {
 
