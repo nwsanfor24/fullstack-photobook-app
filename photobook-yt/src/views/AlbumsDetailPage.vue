@@ -29,7 +29,61 @@
                     :img-key="photo.thumbnail ? photo.thumbnail.key : photo.fullsize.key"
                     class="w-4/12"
                 ></amplify-s3-image>
+                <div v-if="photo.createdAt && photo.gps">
+                    <ul>
+                        <li>Created at {{ photo.createdAt }}</li>
+                        <li>
+                            latitude
+                            {{ photo.gps.latitude }}
+                        </li>
+                        <li>longitude At {{ photo.gps.longitude }}</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    mounted() {
+        this.getPhotos();
+    },
+    data: () => ({
+        photos: [],
+        albumName: "",
+    }),
+    methods: {
+        async onFileChange(file) {
+            if (!file.target || !file.target.files[0]) {
+                return;
+            }
+            try {
+                await this.$store.dispatch("albumInfo/createPhoto", {
+                    file: file.target.files[0],
+                    id: this.id,
+                });
+                this.getPhotos();
+            } catch (error) {
+                console.log("error create photo", error);
+            }
+        },
+        async getPhotos() {
+            const album = await this.$store.dispatch("albumInfo/getAlbum", this.id);
+            this.photos = album.data.getAlbum.photos.items;
+            this.albumName = album.data.getAlbum.name;
+        },
+    },
+    computed: {
+        id() {
+            return this.$route.params.id;
+        },
+    },
+};
+</script>
+
+<style scoped>
+amplify-s3-image {
+    --width: 75%;
+}
+</style>
