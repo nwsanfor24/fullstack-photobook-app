@@ -6,5 +6,11 @@
       "dependsOn": [],
       "customAuth": false
     }
+  },
+  "storage": {
+    "AmplifyPhotoStorage": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }
